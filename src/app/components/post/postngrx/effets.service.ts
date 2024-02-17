@@ -18,7 +18,6 @@ export class PostEffets {
       switchMap(() =>
         this.http.getPost().pipe(
           map((data) => {
-            console.log('http response...', data);
             return fetchApiAction.fetchPostSucess({ posts: data });
           }),
           catchError((error): any => {

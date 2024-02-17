@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpclientService } from 'src/app/services/httpclient.service';
 import { IUser } from '../typings/interfaces';
 import { Store, select } from '@ngrx/store';
@@ -8,27 +8,31 @@ import { MovieState } from 'src/app/reducer/movie-reducer';
 import { fetchApiAction } from '../post/postngrx/action';
 import { selectFetchSelectorSucess } from '../post/postngrx/selector';
 import { Post } from '../post/postngrx/interface';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpclientService,
     private store: Store<MovieState>
   ) {}
+
+  private subs = new SubSink();
   postList$: Observable<Post[]>;
   Movie: Array<Movie> = [];
   movies$ = this.store.select('movies');
   ngOnInit(): void {
     // with the help of store we can dispatch the action
-    this.store.dispatch(fetchApiAction.fetchPost());
-    this.postList$ = this.store.pipe(select(selectFetchSelectorSucess));
-    this.postList$.subscribe((res) => {
-      console.log(res, 'posts in user component...');
-    });
+    // this.store.dispatch(fetchApiAction.fetchPost());
+    this.subs.sink = this.store
+      .pipe(select(selectFetchSelectorSucess))
+      .subscribe((res) => {
+        console.log(res, 'posts in user component...');
+      });
     this.fetch();
   }
 
@@ -62,5 +66,9 @@ export class UserComponent implements OnInit {
     //     }
     //   }
     // );
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 }
