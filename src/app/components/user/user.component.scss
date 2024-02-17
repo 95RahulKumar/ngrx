@@ -1,0 +1,11 @@
+.wrapper{
+  display:flex;
+  flex-direction:row;
+  flex-wrap:wrap;
+  margin:20px 0 0 20px;
+    .example-card{
+      margin:0 10px 10px 0;
+      background: rgba(255, 0, 0, 0.122);
+    }
+}
+

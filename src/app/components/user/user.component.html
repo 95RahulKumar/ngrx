@@ -1,0 +1,16 @@
+<div class="wrapper">
+  <ng-container *ngFor="let movie of movies$|async">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <h1>{{movie.name}}</h1>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{movie.releaseDate}}</p>
+        <p>{{movie.earning}}</p>
+      </mat-card-content>
+
+    </mat-card>
+  </ng-container>
+</div>
+
+<button (click)="addMovie()">add</button>
